@@ -117,7 +117,7 @@ runs:
           --badge-variant ${{ inputs.badge-variant }} \
           --badge-theme ${{ inputs.badge-theme }} \
           --badge-sort ${{ inputs.badge-sort }} \
-          --badge-output ${{ inputs.badge-output }} \
+          --badge-output ${{ inputs.badge-output-path }} \
           --badge-limit ${{ inputs.badge-limit }}
 
         echo "✅ Badge generated successfully ($BADGE_SIZE bytes)"
@@ -128,4 +128,4 @@ runs:
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: ${{ inputs.commit-message }}
-        file_pattern: ${{ inputs.badge-output }}
+        file_pattern: ${{ inputs.badge-output-path }}
