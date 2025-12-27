@@ -1,0 +1,37 @@
+name: Test Action
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-basic:
+    name: Test Basic Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Test action with defaults
+        uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-badge: false
+          output-path: test-basic.svg
+      
+      - name: Verify badge was created
+        run: |
+          if [ ! -f test-basic.svg ]; then
+            echo "Error: Badge file not created"
+            exit 1
+          fi
+          echo "✅ Badge created successfully"
+          ls -lh test-basic.svg
+      
+      - name: Upload badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: badge-basic
+          path: test-basic.svg
