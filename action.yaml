@@ -35,13 +35,17 @@ inputs:
     description: Comma-separated list of organizations to exclude
     default: ""
 
+  timeout:
+    description: Timeout in seconds
+    default: '300'
+
   verbose:
     description: 'Enable verbose logging for debugging'
     default: 'false'
 
-  timeout:
-    description: Timeout in seconds
-    default: '300'
+  debug:
+    description: Uses fake data when true
+    default: 'false'
 
   # ==== Badge Falgs ====
   badge-style:
@@ -112,6 +116,7 @@ runs:
           --exclude-orgs ${{ inputs.exclude-orgs }} \
           --verbose=${{ inputs.verbose }} \
           --timeout ${{ inputs.timeout }} \
+          --debug=${{ inputs.debug }} \
           --badge \
           --badge-style ${{ inputs.badge-style }} \
           --badge-variant ${{ inputs.badge-variant }} \
