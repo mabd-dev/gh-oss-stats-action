@@ -19,7 +19,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-badge: false
-          output-path: test-basic.svg
+          badge-output-path: test-basic.svg
       
       - name: Verify badge was created
         run: |
