@@ -13,9 +13,10 @@ inputs:
   username: 
     description: Github username
     required: true
+    default: ${{ github.repository_owner }}
 
   github-token:
-    description: Github Token for auth Github API requests
+    description: Github Token for API access
     required: true
 
   include-loc:
@@ -35,7 +36,7 @@ inputs:
     default: ""
 
   verbose:
-    description: Verbose logging to stderr
+    description: 'Enable verbose logging for debugging'
     default: 'false'
 
   timeout:
@@ -52,7 +53,7 @@ inputs:
   badge-theme:
     default: 'dark'
 
-  badge-output:
+  badge-output-path:
     description: Output path for the badge
     default: 'oss-stats.svg'
 
@@ -63,13 +64,13 @@ inputs:
     default: 5
 
   # ==== Action Flags ====
-  auto-commit:
-    description: Automatically commit changes
+  commit-badge:
+    description: 'Automatically commit and push the generated badge'
     default: 'true'
 
   commit-message:
-    description: 'Commit message for auto-commit'
-    default: 'Update OSS stats badge'
+    description: Commit message when auto-commit badge
+    default: 'Update OSS contribution badge'
 
   version:
     description: Version of mabd-dev/gh-oss-stats to use
@@ -78,8 +79,10 @@ inputs:
 
 # ============ EXECUTION ============
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
+    # TODO: add input validation step
+    
     - name: Setup Go
       uses: actions/setup-go@v5
       with:
@@ -87,13 +90,20 @@ runs:
 
     - name: Install gh-oss-stats
       shell: bash
-      run: go install github.com/mabd-dev/gh-oss-stats/cmd/gh-oss-stats@${{ inputs.version }}
+      run: |
+        echo "::group::Installing gh-oss-stats CLI"
+        go install github.com/mabd-dev/gh-oss-stats/cmd/gh-oss-stats@latest
+        echo "✅ gh-oss-stats installed successfully"
+        echo "::endgroup::"
 
+    # TODO: after badge generated, verify it's actually generated 
     - name: Generate badge
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
       shell: bash
       run: |
+        echo "::group::Generating OSS contribution badge"
+
         gh-oss-stats \
           --user ${{ inputs.username }} \
           --include-loc=${{ inputs.include-loc }} \
@@ -110,8 +120,11 @@ runs:
           --badge-output ${{ inputs.badge-output }} \
           --badge-limit ${{ inputs.badge-limit }}
 
+        echo "✅ Badge generated successfully ($BADGE_SIZE bytes)"
+        echo "::endgroup::"
+
     - name: Commit changes
-      if: inputs.auto-commit == 'true'
+      if: inputs.commit-badge == 'true'
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: ${{ inputs.commit-message }}
