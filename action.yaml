@@ -12,7 +12,6 @@ branding:
 inputs:
   username: 
     description: Github username
-    required: true
     default: ${{ github.repository_owner }}
 
   github-token:
@@ -25,11 +24,11 @@ inputs:
 
   min-stars:
     description: Minimum repo stars
-    default: 0
+    default: '0'
 
   max-prs:
     description: Max PRs to fetch
-    default: 500
+    default: '500'
 
   exclude-orgs:
     description: Comma-separated list of organizations to exclude
@@ -47,7 +46,7 @@ inputs:
     description: Uses fake data when true
     default: 'false'
 
-  # ==== Badge Falgs ====
+  # ==== Badge Flags ====
   badge-style:
     default: 'summary'
 
@@ -65,7 +64,7 @@ inputs:
     default: 'prs'
 
   badge-limit:
-    default: 5
+    default: '5'
 
   # ==== Action Flags ====
   commit-badge:
@@ -96,7 +95,7 @@ runs:
       shell: bash
       run: |
         echo "::group::Installing gh-oss-stats CLI"
-        go install github.com/mabd-dev/gh-oss-stats/cmd/gh-oss-stats@latest
+        go install github.com/mabd-dev/gh-oss-stats/cmd/gh-oss-stats@${{ inputs.version }}
         echo "✅ gh-oss-stats installed successfully"
         echo "::endgroup::"
 
@@ -113,7 +112,7 @@ runs:
           --include-loc=${{ inputs.include-loc }} \
           --min-stars ${{ inputs.min-stars }} \
           --max-prs ${{ inputs.max-prs }} \
-          --exclude-orgs ${{ inputs.exclude-orgs }} \
+          --exclude-orgs "${{ inputs.exclude-orgs }}" \
           --verbose=${{ inputs.verbose }} \
           --timeout ${{ inputs.timeout }} \
           --debug=${{ inputs.debug }} \
@@ -125,7 +124,7 @@ runs:
           --badge-output ${{ inputs.badge-output-path }} \
           --badge-limit ${{ inputs.badge-limit }}
 
-        echo "✅ Badge generated successfully ($BADGE_SIZE bytes)"
+        echo "✅ Badge generated successfully"
         echo "::endgroup::"
 
     - name: Commit changes
