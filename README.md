@@ -36,7 +36,6 @@ jobs:
         uses: mabd-dev/gh-oss-stats-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          username: ${{ github.repository_owner }}
           badge-style: summary
           badge-theme: dark
 ```
@@ -54,7 +53,6 @@ jobs:
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@v1
   with:
-    username: ${{ github.repository_owner }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
@@ -64,7 +62,6 @@ jobs:
 - uses: mabd-dev/gh-oss-stats-action@v1
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    username: ${{ github.repository_owner }}
     badge-style: detailed
     badge-theme: nord
     badge-variant: text-based
@@ -77,7 +74,6 @@ jobs:
 - uses: mabd-dev/gh-oss-stats-action@v1
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    username: ${{ github.repository_owner }}
     min-stars: 500          # Only repos with 500+ stars
     badge-sort: stars       # Sort by most popular
     badge-limit: 5          # Top 5 repos
@@ -89,7 +85,6 @@ jobs:
 - uses: mabd-dev/gh-oss-stats-action@v1
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    username: ${{ github.repository_owner }}
     exclude-orgs: "my-company,client-org,acme-corp"
     badge-style: summary
 ```
@@ -101,7 +96,6 @@ jobs:
   uses: mabd-dev/gh-oss-stats-action@v1
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    username: ${{ github.repository_owner }}
     badge-theme: dark
     output-path: oss-badge-dark.svg
 
@@ -109,7 +103,6 @@ jobs:
   uses: mabd-dev/gh-oss-stats-action@v1
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    username: ${{ github.repository_owner }}
     badge-theme: light
     output-path: oss-badge-light.svg
 ```
@@ -125,7 +118,6 @@ jobs:
   uses: mabd-dev/gh-oss-stats-action@v1
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    username: ${{ github.repository_owner }}
     auto-commit: false      # Don't auto-commit
 
 - name: Custom Commit Logic
