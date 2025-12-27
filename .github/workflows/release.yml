@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+      
+      - name: Extract changelog
+        id: changelog
+        run: |
+          # Extract changelog for this version from CHANGELOG.md
+          VERSION=${{ steps.version.outputs.version }}
+          
+          # Get content between this version and next version/unreleased
+          CHANGELOG=$(awk "/## \[$VERSION\]/,/## \[/{if(/## \[/ && !/## \[$VERSION\]/)exit;if(!/## \[$VERSION\]/)print}" CHANGELOG.md)
+          
+          # Save to file for GitHub release
+          echo "$CHANGELOG" > release-notes.md
+          
+          echo "Changelog extracted for $VERSION"
+      
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: ${{ steps.version.outputs.version }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: true
+      
+      - name: Update major version tag
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          MAJOR_VERSION=$(echo $VERSION | cut -d. -f1)
+          
+          echo "Updating $MAJOR_VERSION tag to point to $VERSION"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Delete old major version tag if it exists
+          git tag -d $MAJOR_VERSION 2>/dev/null || true
+          git push origin :refs/tags/$MAJOR_VERSION 2>/dev/null || true
+          
+          # Create new major version tag
+          git tag $MAJOR_VERSION
+          git push origin $MAJOR_VERSION --force
+          
+          echo "✅ $MAJOR_VERSION tag updated"
