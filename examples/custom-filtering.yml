@@ -1,0 +1,42 @@
+# Custom Filtering Example
+#
+# Demonstrates advanced filtering options:
+# - Minimum stars requirement
+# - Excluding specific organizations
+# - Limiting number of PRs fetched
+
+name: Generate OSS Badge (Filtered)
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly
+  workflow_dispatch:
+
+permissions:
+  contents: write  # Required for auto-commit
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Generate Filtered OSS Badge
+        uses: mabd-dev/gh-oss-stats-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          badge-style: detailed
+          badge-theme: gruvbox-dark
+          badge-sort: stars
+          badge-limit: 8
+          
+          # Only include repos with 100+ stars
+          min-stars: 100
+          
+          # Exclude your own organizations
+          exclude-orgs: 'my-company,my-personal-org'
+          
+          # Limit API calls (faster for users with many contributions)
+          max-prs: 300
+          
+          output-path: oss-badge-filtered.svg

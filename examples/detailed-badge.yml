@@ -1,0 +1,31 @@
+# Detailed Badge Example
+#
+# Generates a detailed badge showing top 10 repos sorted by stars
+# with Nord theme in the images/ directory
+
+name: Generate OSS Badge (Detailed)
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sundays
+  workflow_dispatch:
+
+permissions:
+  contents: write  # Required for auto-commit
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Generate Detailed OSS Badge
+        uses: mabd-dev/gh-oss-stats-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          badge-style: detailed
+          badge-theme: nord
+          badge-sort: stars
+          badge-limit: 10
+          output-path: images/oss-detailed.svg # make sure images/ folder exists
+          commit-message: 'chore: update OSS contribution badge'

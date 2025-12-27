@@ -220,7 +220,6 @@ Check the Actions logs for detailed API calls and processing steps.
 - **Main Repository**: [github.com/mabd-dev/gh-oss-stats](https://github.com/mabd-dev/gh-oss-stats)
 - **CLI Documentation**: [gh-oss-stats README](https://github.com/mabd-dev/gh-oss-stats#readme)
 - **Issue Tracker**: [Report a bug](https://github.com/mabd-dev/gh-oss-stats-action/issues)
-- **Discussions**: [Ask questions](https://github.com/mabd-dev/gh-oss-stats-action/discussions)
 - **Changelog**: [Release notes](https://github.com/mabd-dev/gh-oss-stats-action/releases)
 
 ***

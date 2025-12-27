@@ -1,0 +1,25 @@
+# Basic Example - Minimal Configuration
+#
+# This is the simplest way to use the action.
+# It generates a summary badge with dark theme and auto-commits it.
+
+name: Generate OSS Badge (Basic)
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sundays at midnight
+  workflow_dispatch:     # Allow manual trigger
+
+permissions:
+  contents: write  # Required for auto-commit
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Generate OSS Badge
+        uses: mabd-dev/gh-oss-stats-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
