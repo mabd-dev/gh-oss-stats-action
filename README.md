@@ -26,6 +26,9 @@ on:
     - cron: '0 0 * * 0'  # Weekly on Sunday at midnight
   workflow_dispatch:      # Manual trigger
 
+permissions:
+  contents: write  # Required for auto-commit
+
 jobs:
   update-badge:
     runs-on: ubuntu-latest
