@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- Download gh-oss-stats binary from latest release based on OS and ARCH
+    - Update workflow test: test with different supported and unsupported combos
+- added write permission to github workflow example
+
+## Fixes
+- run test action on debug data
+
+
 ## [0.1.0] - 2025-12-XX
 
 ### Added
