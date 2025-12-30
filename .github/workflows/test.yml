@@ -29,6 +29,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-badge: false
           badge-output-path: test-${{ matrix.arch }}.svg
+          debug: true
 
       - name: Verify badge was created
         run: |
