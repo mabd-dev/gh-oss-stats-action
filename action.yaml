@@ -116,7 +116,7 @@ runs:
       run: |
         echo "::group::Generating OSS contribution badge"
 
-        gh-oss-stats \
+        ./gh-oss-stats \
           --user ${{ inputs.username }} \
           --include-loc=${{ inputs.include-loc }} \
           --min-stars ${{ inputs.min-stars }} \
