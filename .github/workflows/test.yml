@@ -1,37 +1,71 @@
 name: Test Action
-
 on:
   push:
-    branches: [ main, dev ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  test-basic:
-    name: Test Basic Configuration
-    runs-on: ubuntu-latest
+  test-supported:
+    name: Test on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: linux-amd64
+          - os: ubuntu-24.04-arm
+            arch: linux-arm64
+          - os: macos-latest
+            arch: darwin-arm64
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Test action with defaults
         uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-badge: false
-          badge-output-path: test-basic.svg
-      
+          badge-output-path: test-${{ matrix.arch }}.svg
+          debug: true
+
       - name: Verify badge was created
         run: |
-          if [ ! -f test-basic.svg ]; then
-            echo "Error: Badge file not created"
+          if [ ! -f test-${{ matrix.arch }}.svg ]; then
+            echo "::error::Badge file not created"
             exit 1
           fi
-          echo "✅ Badge created successfully"
-          ls -lh test-basic.svg
-      
+          echo "✅ Badge created successfully on ${{ matrix.arch }}"
+          ls -lh test-${{ matrix.arch }}.svg
+
       - name: Upload badge
         uses: actions/upload-artifact@v4
         with:
-          name: badge-basic
-          path: test-basic.svg
+          name: badge-${{ matrix.arch }}
+          path: test-${{ matrix.arch }}.svg
+
+  test-unsupported:
+    name: Test unsupported platform fails
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test action should fail
+        id: should-fail
+        uses: ./
+        continue-on-error: true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-badge: false
+          badge-output-path: test-unsupported.svg
+
+      - name: Verify it failed
+        shell: bash
+        run: |
+          if [ "${{ steps.should-fail.outcome }}" == "success" ]; then
+            echo "::error::Action should have failed on unsupported platform but succeeded"
+            exit 1
+          fi
+          echo "✅ Action correctly failed on unsupported platform (windows)"
