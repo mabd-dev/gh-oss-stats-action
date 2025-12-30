@@ -47,7 +47,7 @@ jobs:
 
   test-unsupported:
     name: Test unsupported platform fails
-    runs-on: macos-13  # Intel Mac = darwin/amd64 (not supported)
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -61,9 +61,10 @@ jobs:
           badge-output-path: test-unsupported.svg
 
       - name: Verify it failed
+        shell: bash
         run: |
           if [ "${{ steps.should-fail.outcome }}" == "success" ]; then
             echo "::error::Action should have failed on unsupported platform but succeeded"
             exit 1
           fi
-          echo "✅ Action correctly failed on unsupported platform (darwin/amd64)"
+          echo "✅ Action correctly failed on unsupported platform (windows)"
