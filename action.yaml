@@ -91,22 +91,45 @@ runs:
       with:
         go-version: '1.25'
 
-    - name: Download latest myapp
+    - name: Download gh-oss-stats
       shell: bash
       run: |
         echo "::group::Installing gh-oss-stats binary"
-        curl -L -o gh-oss-stats \
-          "https://github.com/mabd-dev/gh-oss-stats/releases/latest/download/gh-oss-stats-linux-amd64"
+        
+        OS=$(uname -s | tr '[:upper:]' '[:lower:]')  # Linux -> linux, Darwin -> darwin
+        ARCH=$(uname -m)
+        
+        # Map architecture names
+        case "$ARCH" in
+          x86_64)  ARCH="amd64" ;;
+          aarch64) ARCH="arm64" ;;
+          arm64)   ARCH="arm64" ;;  # macOS reports arm64 directly
+          *)
+            echo "::error::Unsupported architecture: $ARCH"
+            exit 1
+            ;;
+        esac
+        
+        BINARY="gh-oss-stats-${OS}-${ARCH}"
+        
+        # Validate supported combinations
+        case "$BINARY" in
+          gh-oss-stats-linux-amd64|gh-oss-stats-linux-arm64|gh-oss-stats-darwin-arm64)
+            echo "Downloading $BINARY..."
+            ;;
+          *)
+            echo "::error::Unsupported platform: ${OS}/${ARCH}"
+            echo "::error::Supported: linux/amd64, linux/arm64, darwin/arm64"
+            exit 1
+            ;;
+        esac
+        
+        curl -fSL -o gh-oss-stats \
+          "https://github.com/mabd-dev/gh-oss-stats/releases/latest/download/${BINARY}"
         chmod +x gh-oss-stats
+        
+        echo "✅ Installed $BINARY"
         echo "::endgroup::"
-
-    # - name: Install gh-oss-stats
-    #   shell: bash
-    #   run: |
-    #     echo "::group::Installing gh-oss-stats CLI"
-    #     go install github.com/mabd-dev/gh-oss-stats/cmd/gh-oss-stats@${{ inputs.version }}
-    #     echo "✅ gh-oss-stats installed successfully"
-    #     echo "::endgroup::"
 
     # TODO: after badge generated, verify it's actually generated 
     - name: Generate badge
