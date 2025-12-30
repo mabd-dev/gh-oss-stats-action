@@ -46,7 +46,7 @@ jobs:
           release_name: ${{ steps.version.outputs.version }}
           body_path: release-notes.md
           draft: false
-          prerelease: true
+          prerelease: false
       
       - name: Update major version tag
         run: |
