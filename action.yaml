@@ -91,13 +91,21 @@ runs:
       with:
         go-version: '1.25'
 
-    - name: Install gh-oss-stats
-      shell: bash
+    - name: Download latest myapp
       run: |
-        echo "::group::Installing gh-oss-stats CLI"
-        go install github.com/mabd-dev/gh-oss-stats/cmd/gh-oss-stats@${{ inputs.version }}
-        echo "✅ gh-oss-stats installed successfully"
+        echo "::group::Installing gh-oss-stats binary"
+        curl -L -o gh-oss-stats \
+          "https://github.com/mabd-dev/gh-oss-stats/releases/latest/download/gh-oss-stats-linux-amd64"
+        chmod +x gh-oss-stats
         echo "::endgroup::"
+
+    # - name: Install gh-oss-stats
+    #   shell: bash
+    #   run: |
+    #     echo "::group::Installing gh-oss-stats CLI"
+    #     go install github.com/mabd-dev/gh-oss-stats/cmd/gh-oss-stats@${{ inputs.version }}
+    #     echo "✅ gh-oss-stats installed successfully"
+    #     echo "::endgroup::"
 
     # TODO: after badge generated, verify it's actually generated 
     - name: Generate badge
