@@ -156,19 +156,21 @@ runs:
           --exclude-orgs "${{ inputs.exclude-orgs }}" \
           --verbose=${{ inputs.verbose }} \
           --timeout ${{ inputs.timeout }} \
-        )
+        ) > /tmp/stats.json
 
         # Export to output
         echo "json<<EOF" >> $GITHUB_OUTPUT
-        echo "$JSON" >> $GITHUB_OUTPUT
+        cat /tmp/stats.json >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Generate Badge
       if: inputs.mode == 'badge'
       id: badge
       shell: bash
+      env:
+        STATS_DATA: ${{ inputs.data }}
       run: |
-        echo '${{ inputs.data }}' > /tmp/stats.json
+        echo "$STATS_DATA" > /tmp/stats.json
 
         ./gh-oss-stats badge \
           --from-json '/tmp/stats.json' \
