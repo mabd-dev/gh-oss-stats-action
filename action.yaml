@@ -173,7 +173,7 @@ runs:
         echo "$STATS_DATA" > /tmp/stats.json
 
         ./gh-oss-stats badge \
-          --from-json '/tmp/stats.json' \
+          --from-file '/tmp/stats.json' \
           --badge-style ${{ inputs.badge-style }} \
           --badge-variant ${{ inputs.badge-variant }} \
           --badge-theme ${{ inputs.badge-theme }} \
