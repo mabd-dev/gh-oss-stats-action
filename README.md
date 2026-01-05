@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Generate OSS Badge
-        uses: mabd-dev/gh-oss-stats-action@v1
+        uses: mabd-dev/gh-oss-stats-action@v0.2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           badge-style: summary
@@ -54,7 +54,7 @@ jobs:
 ### Basic Usage (Minimal Configuration)
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v1
+- uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -62,7 +62,7 @@ jobs:
 ### Custom Theme & Style
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v1
+- uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
     badge-style: detailed
@@ -74,7 +74,7 @@ jobs:
 ### Filter High-Impact Contributions
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v1
+- uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
     min-stars: 500          # Only repos with 500+ stars
@@ -85,7 +85,7 @@ jobs:
 ### Exclude Work Organizations
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v1
+- uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
     exclude-orgs: "my-company,client-org,acme-corp"
@@ -98,14 +98,14 @@ jobs:
 
 - name: Fetch OSS Stats
   id: stats
-  uses: mabd-dev/gh-oss-stats-action@v1
+  uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with: 
     mode: fetch
     github-token: ${{ secrets.GITHUB_TOKEN }}
 
 
 - name: Generate Summary Badge
-  uses: mabd-dev/gh-oss-stats-action@v1
+  uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with:
     mode: badge
     data: ${{ steps.stats.outputs.json }}
@@ -114,7 +114,7 @@ jobs:
     output-path: oss-badge-dark.svg
 
 - name: Generate Detailed Badge
-  uses: mabd-dev/gh-oss-stats-action@v1
+  uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with:
     mode: badge
     data: ${{ steps.stats.outputs.json }}
@@ -131,7 +131,7 @@ jobs:
 - uses: actions/checkout@v4
 
 - name: Generate Badge
-  uses: mabd-dev/gh-oss-stats-action@v1
+  uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
     auto-commit: false      # Don't auto-commit
@@ -222,7 +222,7 @@ on:
 
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v1
+- uses: mabd-dev/gh-oss-stats-action@v0.2.0
   with:
     verbose: true
 ```
