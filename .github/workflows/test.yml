@@ -108,7 +108,7 @@ jobs:
           data: ${{ steps.stats.outputs.json }}
           badge-style: summary
           badge-theme: dark
-          badge-output-path: badges/summary.svg
+          badge-output-path: summary.svg
           commit-badge: false
 
       - name: Generate Detailed Badge
@@ -118,5 +118,5 @@ jobs:
           data: ${{ steps.stats.outputs.json }}
           badge-style: detailed
           badge-theme: neon-glass
-          badge-output-path: badges/detailed.svg
+          badge-output-path: detailed.svg
           commit-badge: false
