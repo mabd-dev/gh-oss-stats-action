@@ -83,7 +83,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print json output
-        STATS_JSON: ${{ steps.stats.outputs.json }}
+        env:
+          STATS_JSON: ${{ steps.stats.outputs.json }}
         run: |
           echo "My OSS contribution stats:"
           echo "$STATS_JSON" | jq .
