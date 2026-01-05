@@ -95,19 +95,32 @@ jobs:
 ### Multiple Badges (Different Themes)
 
 ```yaml
-- name: Generate Dark Badge
+
+- name: Fetch OSS Stats
+  id: stats
+  uses: mabd-dev/gh-oss-stats-action@v1
+  with: 
+    mode: fetch
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+
+
+- name: Generate Summary Badge
   uses: mabd-dev/gh-oss-stats-action@v1
   with:
+    mode: badge
+    data: ${{ steps.stats.outputs.json }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    badge-theme: dark
+    badge-style: summary
     output-path: oss-badge-dark.svg
 
-- name: Generate Light Badge
+- name: Generate Detailed Badge
   uses: mabd-dev/gh-oss-stats-action@v1
   with:
+    mode: badge
+    data: ${{ steps.stats.outputs.json }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    badge-theme: light
-    output-path: oss-badge-light.svg
+    badge-style: detailed
+    output-path: oss-badge-dark.svg
 ```
 
 
