@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [0.2.1] - 2026-01-05
+
+### Added
+- **Added modes**: fetch, generate, full
+- Default mode is **full** for backward compatibility
+- Update docs on multiple badge generation to use new modes feature
+- Badge generation verification + print svg file size
+
+
 ## [0.2.0] - 2025-12-30
 
 ### Added

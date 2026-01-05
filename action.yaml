@@ -1,4 +1,4 @@
-# ============ METADATA ============
+# =========
 name: gh-oss-stats
 description: Generate Badge To Showcase Your Open Source Contributions
 author: mabd-dev
@@ -10,6 +10,11 @@ branding:
 
 # ============= INPUTS ==============
 inputs:
+  mode:
+    description: 'Operation mode: "fetch" to get stats, "badge" to generate badge, "full" to fetch and generate badge'
+    required: false
+    default: 'full'
+
   username: 
     description: Github username
     default: ${{ github.repository_owner }}
@@ -79,17 +84,21 @@ inputs:
     description: Version of mabd-dev/gh-oss-stats to use
     default: latest
 
+  data:
+    description: 'JSON stats data (from fetch mode output)'
+    required: false
+
+
+# ============= OUTPUTS ==============
+outputs:
+  json:
+    description: 'JSON stats data (only set in fetch mode)'
+    value: ${{ steps.fetch.outputs.json }}
 
 # ============ EXECUTION ============
 runs:
   using: 'composite'
   steps:
-    # TODO: add input validation step
-    
-    - name: Setup Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.25'
 
     - name: Download gh-oss-stats
       shell: bash
@@ -131,11 +140,85 @@ runs:
         echo "✅ Installed $BINARY"
         echo "::endgroup::"
 
-    # TODO: after badge generated, verify it's actually generated 
-    - name: Generate badge
+
+    - name: Fetch Stats
+      if: inputs.mode == 'fetch'
+      id: fetch
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        ./gh-oss-stats \
+          --user ${{ inputs.username }} \
+          --include-loc=${{ inputs.include-loc }} \
+          --min-stars ${{ inputs.min-stars }} \
+          --max-prs ${{ inputs.max-prs }} \
+          --exclude-orgs "${{ inputs.exclude-orgs }}" \
+          --verbose=${{ inputs.verbose }} \
+          --timeout ${{ inputs.timeout }} \
+        > /tmp/stats.json
+
+        # Export to output
+        echo "json<<EOF" >> $GITHUB_OUTPUT
+        cat /tmp/stats.json >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Generate Badge
+      if: inputs.mode == 'badge'
+      id: badge
       shell: bash
+      env:
+        STATS_DATA: ${{ inputs.data }}
+      run: |
+        # Debug: Check if data was received
+        if [ -z "$STATS_DATA" ]; then
+          echo "::error::No data received in 'data' input"
+          echo "::error::Make sure the previous 'fetch' step succeeded and outputs.json was set"
+          exit 1
+        fi
+
+        echo "::group::Debug JSON Data"
+        echo "Data length: ${#STATS_DATA} characters"
+        echo "First 500 chars of received data:"
+        echo "$STATS_DATA" | head -c 500
+        echo ""
+        echo "::endgroup::"
+
+        # Write JSON data to file, preserving exact content
+        printf '%s' "$STATS_DATA" > /tmp/stats.json
+
+        # Validate file was created
+        if [ ! -f /tmp/stats.json ]; then
+          echo "::error::Failed to create /tmp/stats.json"
+          exit 1
+        fi
+
+        echo "Created /tmp/stats.json ($(wc -c < /tmp/stats.json) bytes)"
+
+        ./gh-oss-stats badge \
+          --from-file '/tmp/stats.json' \
+          --badge-style ${{ inputs.badge-style }} \
+          --badge-variant ${{ inputs.badge-variant }} \
+          --badge-theme ${{ inputs.badge-theme }} \
+          --badge-sort ${{ inputs.badge-sort }} \
+          --badge-output ${{ inputs.badge-output-path }} \
+          --badge-limit ${{ inputs.badge-limit }}
+
+
+        if [ ! -f "${{ inputs.badge-output-path }}" ]; then
+          echo "::error::Badge file was not created at ${{ inputs.badge-output-path }}"
+          exit 1
+        fi
+
+        BADGE_SIZE=$(stat -f%z "${{ inputs.badge-output-path }}" 2>/dev/null || stat -c%s "${{ inputs.badge-output-path }}" 2>/dev/null)
+        echo "✅ Badge generated successfully ($BADGE_SIZE bytes)"
+
+    - name: Fetch & Generate badge
+      if: inputs.mode == 'full'
+      shell: bash
+      id: full
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         echo "::group::Generating OSS contribution badge"
 
@@ -156,11 +239,17 @@ runs:
           --badge-output ${{ inputs.badge-output-path }} \
           --badge-limit ${{ inputs.badge-limit }}
 
-        echo "✅ Badge generated successfully"
+        if [ ! -f "${{ inputs.badge-output-path }}" ]; then
+          echo "::error::Badge file was not created at ${{ inputs.badge-output-path }}"
+          exit 1
+        fi
+        
+        BADGE_SIZE=$(stat -f%z "${{ inputs.badge-output-path }}" 2>/dev/null || stat -c%s "${{ inputs.badge-output-path }}" 2>/dev/null)
+        echo "✅ Badge generated successfully ($BADGE_SIZE bytes)"
         echo "::endgroup::"
 
     - name: Commit changes
-      if: inputs.commit-badge == 'true'
+      if: inputs.commit-badge == 'true' && inputs.mode != 'fetch'
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: ${{ inputs.commit-message }}
