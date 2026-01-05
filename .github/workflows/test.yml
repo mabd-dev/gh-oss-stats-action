@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-supported:
+  test-supported-binaries:
     name: Test on ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -46,7 +46,7 @@ jobs:
           name: badge-${{ matrix.arch }}
           path: test-${{ matrix.arch }}.svg
 
-  test-unsupported:
+  test-unsupported-binaries:
     name: Test unsupported platform fails
     runs-on: windows-latest
     steps:
@@ -69,3 +69,52 @@ jobs:
             exit 1
           fi
           echo "✅ Action correctly failed on unsupported platform (windows)"
+
+  check-stats:
+    name: Fetch data and print
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch OSS Stats
+        id: stats
+        uses: ./ 
+        with:
+          mode: fetch
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print json output
+        run: |
+          echo "My OSS contribution stats:"
+          echo '${{ steps.stats.outputs.json }}' | jq .
+
+  generate-multiple-badges:
+    name: Fetch once, generate multiple badges
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch OSS Stats
+        id: stats
+        uses: ./ 
+        with: 
+          mode: fetch
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Summary Badge
+        uses: ./
+        with:
+          mode: badge
+          data: ${{ steps.stats.outputs.json }}
+          badge-style: summary
+          badge-theme: dark
+          badge-output-path: badges/summary.svg
+          commit-badge: false
+
+      - name: Generate Detailed Badge
+        uses: ./
+        with:
+          mode: badge
+          data: ${{ steps.stats.outputs.json }}
+          badge-style: detailed
+          badge-theme: neon-glass
+          badge-output-path: badges/detailed.svg
+          commit-badge: false
