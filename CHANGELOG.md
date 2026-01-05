@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Added modes**: fetch, generate, full
+- Default mode is **full** for backward compatibility
+- Update docs on multiple badge generation to use new modes feature
+
 
 ## [0.2.0] - 2025-12-30
 
