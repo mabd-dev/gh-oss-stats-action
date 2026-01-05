@@ -148,7 +148,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
-        JSON=$(./gh-oss-stats \
+        gh-oss-stats \
           --user ${{ inputs.username }} \
           --include-loc=${{ inputs.include-loc }} \
           --min-stars ${{ inputs.min-stars }} \
@@ -156,7 +156,7 @@ runs:
           --exclude-orgs "${{ inputs.exclude-orgs }}" \
           --verbose=${{ inputs.verbose }} \
           --timeout ${{ inputs.timeout }} \
-        ) > /tmp/stats.json
+        > /tmp/stats.json
 
         # Export to output
         echo "json<<EOF" >> $GITHUB_OUTPUT
