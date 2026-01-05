@@ -170,7 +170,30 @@ runs:
       env:
         STATS_DATA: ${{ inputs.data }}
       run: |
+        # Debug: Check if data was received
+        if [ -z "$STATS_DATA" ]; then
+          echo "::error::No data received in 'data' input"
+          echo "::error::Make sure the previous 'fetch' step succeeded and outputs.json was set"
+          exit 1
+        fi
+
+        echo "::group::Debug JSON Data"
+        echo "Data length: ${#STATS_DATA} characters"
+        echo "First 500 chars of received data:"
+        echo "$STATS_DATA" | head -c 500
+        echo ""
+        echo "::endgroup::"
+
+        # Write JSON data to file, preserving exact content
         printf '%s' "$STATS_DATA" > /tmp/stats.json
+
+        # Validate file was created
+        if [ ! -f /tmp/stats.json ]; then
+          echo "::error::Failed to create /tmp/stats.json"
+          exit 1
+        fi
+
+        echo "Created /tmp/stats.json ($(wc -c < /tmp/stats.json) bytes)"
 
         ./gh-oss-stats badge \
           --from-file '/tmp/stats.json' \
@@ -186,7 +209,7 @@ runs:
           echo "::error::Badge file was not created at ${{ inputs.badge-output-path }}"
           exit 1
         fi
-        
+
         BADGE_SIZE=$(stat -f%z "${{ inputs.badge-output-path }}" 2>/dev/null || stat -c%s "${{ inputs.badge-output-path }}" 2>/dev/null)
         echo "✅ Badge generated successfully ($BADGE_SIZE bytes)"
 
