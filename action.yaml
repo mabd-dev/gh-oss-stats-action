@@ -170,7 +170,7 @@ runs:
       env:
         STATS_DATA: ${{ inputs.data }}
       run: |
-        echo "$STATS_DATA" > /tmp/stats.json
+        printf '%s' "$STATS_DATA" > /tmp/stats.json
 
         ./gh-oss-stats badge \
           --from-file '/tmp/stats.json' \
