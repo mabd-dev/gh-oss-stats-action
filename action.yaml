@@ -181,6 +181,15 @@ runs:
           --badge-output ${{ inputs.badge-output-path }} \
           --badge-limit ${{ inputs.badge-limit }}
 
+
+        if [ ! -f "${{ inputs.badge-output-path }}" ]; then
+          echo "::error::Badge file was not created at ${{ inputs.badge-output-path }}"
+          exit 1
+        fi
+        
+        BADGE_SIZE=$(stat -f%z "${{ inputs.badge-output-path }}" 2>/dev/null || stat -c%s "${{ inputs.badge-output-path }}" 2>/dev/null)
+        echo "✅ Badge generated successfully ($BADGE_SIZE bytes)"
+
     - name: Fetch & Generate badge
       if: inputs.mode == 'full'
       shell: bash
@@ -207,7 +216,13 @@ runs:
           --badge-output ${{ inputs.badge-output-path }} \
           --badge-limit ${{ inputs.badge-limit }}
 
-        echo "✅ Badge generated successfully"
+        if [ ! -f "${{ inputs.badge-output-path }}" ]; then
+          echo "::error::Badge file was not created at ${{ inputs.badge-output-path }}"
+          exit 1
+        fi
+        
+        BADGE_SIZE=$(stat -f%z "${{ inputs.badge-output-path }}" 2>/dev/null || stat -c%s "${{ inputs.badge-output-path }}" 2>/dev/null)
+        echo "✅ Badge generated successfully ($BADGE_SIZE bytes)"
         echo "::endgroup::"
 
     - name: Commit changes
