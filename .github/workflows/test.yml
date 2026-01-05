@@ -83,9 +83,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print json output
+        STATS_JSON: ${{ steps.stats.outputs.json }}
         run: |
           echo "My OSS contribution stats:"
-          echo '${{ steps.stats.outputs.json }}' | jq .
+          echo "$STATS_JSON" | jq .
 
   generate-multiple-badges:
     name: Fetch once, generate multiple badges
