@@ -10,8 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Updates
 
-- Readme: replaced tool hardcoded version with `version` keyword
-
+- **README**: 
+    - replaced tool hardcoded version with `version` keyword
+    - Added docs on how to save contributions to json file
 
 
 ## [0.2.1] - 2026-01-05

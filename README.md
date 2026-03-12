@@ -136,6 +136,33 @@ jobs:
 ```
 
 
+### Saves Stats Json
+
+```yaml
+
+- uses: actions/checkout@v4
+
+- name: Generate OSS Stats
+    id: stats
+    uses: mabd-dev/gh-oss-stats-action@version
+    with:
+      username: <your-username>
+      mode: fetch
+
+- name: Save stats to file
+    env:
+      STATS_JSON: ${{ steps.stats.outputs.json }}
+    run: |
+      echo "Saving stats to json"
+      echo "$STATS_JSON" > contributions.json
+
+- name: Commit changes
+    uses: stefanzweifel/git-auto-commit-action@v5
+    with:
+      commit_message: 'Updated OSS contributions data'
+      file_pattern: contributions.json
+```
+
 ---
 
 ## 🛠️ Troubleshooting
