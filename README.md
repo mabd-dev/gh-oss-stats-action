@@ -36,9 +36,8 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Generate OSS Badge
-        uses: mabd-dev/gh-oss-stats-action@v0.2.0
+        uses: mabd-dev/gh-oss-stats-action@version
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           badge-style: summary
           badge-theme: dark
 ```
@@ -54,17 +53,14 @@ jobs:
 ### Basic Usage (Minimal Configuration)
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v0.2.0
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+- uses: mabd-dev/gh-oss-stats-action@version
 ```
 
 ### Custom Theme & Style
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v0.2.0
+- uses: mabd-dev/gh-oss-stats-action@version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     badge-style: detailed
     badge-theme: nord
     badge-variant: text-based
@@ -74,9 +70,8 @@ jobs:
 ### Filter High-Impact Contributions
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v0.2.0
+- uses: mabd-dev/gh-oss-stats-action@version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     min-stars: 500          # Only repos with 500+ stars
     badge-sort: stars       # Sort by most popular
     badge-limit: 5          # Top 5 repos
@@ -85,9 +80,8 @@ jobs:
 ### Exclude Work Organizations
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v0.2.0
+- uses: mabd-dev/gh-oss-stats-action@version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     exclude-orgs: "my-company,client-org,acme-corp"
     badge-style: summary
 ```
@@ -98,27 +92,24 @@ jobs:
 
 - name: Fetch OSS Stats
   id: stats
-  uses: mabd-dev/gh-oss-stats-action@v0.2.0
+  uses: mabd-dev/gh-oss-stats-action@version
   with: 
     mode: fetch
-    github-token: ${{ secrets.GITHUB_TOKEN }}
 
 
 - name: Generate Summary Badge
-  uses: mabd-dev/gh-oss-stats-action@v0.2.0
+  uses: mabd-dev/gh-oss-stats-action@version
   with:
     mode: badge
     data: ${{ steps.stats.outputs.json }}
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     badge-style: summary
     output-path: oss-badge-dark.svg
 
 - name: Generate Detailed Badge
-  uses: mabd-dev/gh-oss-stats-action@v0.2.0
+  uses: mabd-dev/gh-oss-stats-action@version
   with:
     mode: badge
     data: ${{ steps.stats.outputs.json }}
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     badge-style: detailed
     output-path: oss-badge-dark.svg
 ```
@@ -131,9 +122,8 @@ jobs:
 - uses: actions/checkout@v4
 
 - name: Generate Badge
-  uses: mabd-dev/gh-oss-stats-action@v0.2.0
+  uses: mabd-dev/gh-oss-stats-action@version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     auto-commit: false      # Don't auto-commit
 
 - name: Custom Commit Logic
@@ -145,6 +135,33 @@ jobs:
     git push
 ```
 
+
+### Saves Stats Json
+
+```yaml
+
+- uses: actions/checkout@v4
+
+- name: Generate OSS Stats
+    id: stats
+    uses: mabd-dev/gh-oss-stats-action@version
+    with:
+      username: <your-username>
+      mode: fetch
+
+- name: Save stats to file
+    env:
+      STATS_JSON: ${{ steps.stats.outputs.json }}
+    run: |
+      echo "Saving stats to json"
+      echo "$STATS_JSON" > contributions.json
+
+- name: Commit changes
+    uses: stefanzweifel/git-auto-commit-action@v5
+    with:
+      commit_message: 'Updated OSS contributions data'
+      file_pattern: contributions.json
+```
 
 ---
 
@@ -210,7 +227,7 @@ on:
 
 ### Q: Can I customize badge colors/fonts?
 
-**A:** Currently, customization is limited to the 6 themes and 2 variants. Full custom styling requires forking and modifying the badge generation templates. Open an issue if you need specific customization.
+**A:** Currently, customization is limited to the 18 themes. Full custom styling requires forking and modifying the badge generation templates. Open an issue if you need specific customization.
 
 ### Q: What counts as an "external" contribution?
 
@@ -222,7 +239,7 @@ on:
 
 
 ```yaml
-- uses: mabd-dev/gh-oss-stats-action@v0.2.0
+- uses: mabd-dev/gh-oss-stats-action@version
   with:
     verbose: true
 ```

@@ -21,6 +21,7 @@ inputs:
 
   github-token:
     description: Github Token for API access
+    default: ${{ secrets.GITHUB_TOKEN }}
     required: true
 
   include-loc:

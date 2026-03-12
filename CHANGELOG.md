@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-03-12
+
+### 🔧 Updates
+
+- Added default `github token` to action
+
+- **README**: 
+    - replaced tool hardcoded version with `version` keyword
+    - Added docs on how to save contributions to json file
+
 
 ## [0.2.1] - 2026-01-05
 
