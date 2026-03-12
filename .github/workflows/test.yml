@@ -26,7 +26,7 @@ jobs:
       - name: Test action with defaults
         uses: ./
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-badge: false
           badge-output-path: test-${{ matrix.arch }}.svg
           debug: true
@@ -57,7 +57,7 @@ jobs:
         uses: ./
         continue-on-error: true
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          #github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-badge: false
           badge-output-path: test-unsupported.svg
 
@@ -80,7 +80,7 @@ jobs:
         uses: ./ 
         with:
           mode: fetch
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print json output
         env:
@@ -99,7 +99,7 @@ jobs:
         uses: ./ 
         with: 
           mode: fetch
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Summary Badge
         uses: ./
