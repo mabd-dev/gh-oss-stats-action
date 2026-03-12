@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Updates
 
+- Added default `github token` to action
+
 - **README**: 
     - replaced tool hardcoded version with `version` keyword
     - Added docs on how to save contributions to json file
