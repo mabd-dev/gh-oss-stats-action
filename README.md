@@ -38,7 +38,6 @@ jobs:
       - name: Generate OSS Badge
         uses: mabd-dev/gh-oss-stats-action@version
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           badge-style: summary
           badge-theme: dark
 ```
@@ -55,8 +54,6 @@ jobs:
 
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Custom Theme & Style
@@ -64,7 +61,6 @@ jobs:
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     badge-style: detailed
     badge-theme: nord
     badge-variant: text-based
@@ -76,7 +72,6 @@ jobs:
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     min-stars: 500          # Only repos with 500+ stars
     badge-sort: stars       # Sort by most popular
     badge-limit: 5          # Top 5 repos
@@ -87,7 +82,6 @@ jobs:
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     exclude-orgs: "my-company,client-org,acme-corp"
     badge-style: summary
 ```
@@ -101,7 +95,6 @@ jobs:
   uses: mabd-dev/gh-oss-stats-action@version
   with: 
     mode: fetch
-    github-token: ${{ secrets.GITHUB_TOKEN }}
 
 
 - name: Generate Summary Badge
@@ -109,7 +102,6 @@ jobs:
   with:
     mode: badge
     data: ${{ steps.stats.outputs.json }}
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     badge-style: summary
     output-path: oss-badge-dark.svg
 
@@ -118,7 +110,6 @@ jobs:
   with:
     mode: badge
     data: ${{ steps.stats.outputs.json }}
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     badge-style: detailed
     output-path: oss-badge-dark.svg
 ```
@@ -133,7 +124,6 @@ jobs:
 - name: Generate Badge
   uses: mabd-dev/gh-oss-stats-action@version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
     auto-commit: false      # Don't auto-commit
 
 - name: Custom Commit Logic
