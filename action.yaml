@@ -216,7 +216,7 @@ runs:
     - name: Fetch & Generate badge
       if: inputs.mode == 'full'
       shell: bash
-      id: fetch
+      id: full
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
