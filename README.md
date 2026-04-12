@@ -38,6 +38,7 @@ jobs:
       - name: Generate OSS Badge
         uses: mabd-dev/gh-oss-stats-action@version
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           badge-style: summary
           badge-theme: dark
 ```
@@ -54,6 +55,8 @@ jobs:
 
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
+    with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Custom Theme & Style
@@ -61,6 +64,7 @@ jobs:
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
   with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
     badge-style: detailed
     badge-theme: nord
     badge-variant: text-based
@@ -72,6 +76,7 @@ jobs:
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
   with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
     min-stars: 500          # Only repos with 500+ stars
     badge-sort: stars       # Sort by most popular
     badge-limit: 5          # Top 5 repos
@@ -82,6 +87,7 @@ jobs:
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
   with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
     exclude-orgs: "my-company,client-org,acme-corp"
     badge-style: summary
 ```
@@ -94,12 +100,14 @@ jobs:
   id: stats
   uses: mabd-dev/gh-oss-stats-action@version
   with: 
+    github-token: ${{ secrets.GITHUB_TOKEN }}
     mode: fetch
 
 
 - name: Generate Summary Badge
   uses: mabd-dev/gh-oss-stats-action@version
   with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
     mode: badge
     data: ${{ steps.stats.outputs.json }}
     badge-style: summary
@@ -108,6 +116,7 @@ jobs:
 - name: Generate Detailed Badge
   uses: mabd-dev/gh-oss-stats-action@version
   with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
     mode: badge
     data: ${{ steps.stats.outputs.json }}
     badge-style: detailed
@@ -124,6 +133,7 @@ jobs:
 - name: Generate Badge
   uses: mabd-dev/gh-oss-stats-action@version
   with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
     auto-commit: false      # Don't auto-commit
 
 - name: Custom Commit Logic
@@ -143,24 +153,25 @@ jobs:
 - uses: actions/checkout@v4
 
 - name: Generate OSS Stats
-    id: stats
-    uses: mabd-dev/gh-oss-stats-action@version
-    with:
-      username: <your-username>
-      mode: fetch
+  id: stats
+  uses: mabd-dev/gh-oss-stats-action@version
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    username: <your-username>
+    mode: fetch
 
 - name: Save stats to file
-    env:
-      STATS_JSON: ${{ steps.stats.outputs.json }}
-    run: |
-      echo "Saving stats to json"
-      echo "$STATS_JSON" > contributions.json
+  env:
+    STATS_JSON: ${{ steps.stats.outputs.json }}
+  run: |
+    echo "Saving stats to json"
+    echo "$STATS_JSON" > contributions.json
 
 - name: Commit changes
-    uses: stefanzweifel/git-auto-commit-action@v5
-    with:
-      commit_message: 'Updated OSS contributions data'
-      file_pattern: contributions.json
+  uses: stefanzweifel/git-auto-commit-action@v5
+  with:
+    commit_message: 'Updated OSS contributions data'
+    file_pattern: contributions.json
 ```
 
 ---
@@ -241,6 +252,7 @@ on:
 ```yaml
 - uses: mabd-dev/gh-oss-stats-action@version
   with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
     verbose: true
 ```
 

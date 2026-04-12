@@ -21,7 +21,6 @@ inputs:
 
   github-token:
     description: Github Token for API access
-    default: ${{ secrets.GITHUB_TOKEN }}
     required: true
 
   include-loc:
@@ -38,7 +37,7 @@ inputs:
 
   exclude-orgs:
     description: Comma-separated list of organizations to exclude
-    default: ""
+    default: ''
 
   timeout:
     description: Timeout in seconds
@@ -217,7 +216,7 @@ runs:
     - name: Fetch & Generate badge
       if: inputs.mode == 'full'
       shell: bash
-      id: full
+      id: fetch
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
